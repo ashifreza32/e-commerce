@@ -11,7 +11,9 @@ const createToken = (id) => {
 const loginUser =async (req,res)=>{
     try{
         const {email,password}= req.body;
-
+        if (!email || !password){
+            return res.json({success:false, message:"Please enter all fields"})
+        }
         const user = await userModel.findOne({email});
         if(!user){
             return res.json({success:false, message:"User not found"})
@@ -32,7 +34,12 @@ const loginUser =async (req,res)=>{
 //route for user register
 const registerUser = async (req,res)=>{
     try{
-        const {name,email,password}= req.body
+        const {name,email,password}= req.body;
+        
+
+        if (!name || !email || !password){
+            return res.json({success:false, message:"Please enter all fields"})
+        }
         //user already exists or not 
         const exists= await userModel.findOne({email});
         if(exists){

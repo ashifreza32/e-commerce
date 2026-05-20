@@ -26,6 +26,7 @@ const addProduct = async(req,res)=>{
                  return result.secure_url 
             })
         )
+
         const product = new productModel({
             name,
             description,
@@ -37,7 +38,7 @@ const addProduct = async(req,res)=>{
             images: imagesUrl,
             date: Date.now()
         });
-
+ 
         await product.save();
 
         res.json({success:true,message:'Product added successfully',product})
@@ -46,11 +47,12 @@ const addProduct = async(req,res)=>{
         res.json({success:false,message:error.message})
     } 
 }
-
 //function for  list product
 const listProducts = async(req,res)=>{
     try{
-    }catch (error){
+        const products = await productModel.find({});
+        res.json({success:true,products})
+    }catch(error){
         console.log(error);
         res.json({success:false,message:error.message})
     }
@@ -59,6 +61,9 @@ const listProducts = async(req,res)=>{
 //function for single product
 const singleProduct = async(req,res)=>{
     try{
+        const {productId} = req.body;
+        const product = await productModel.findById(productId);
+        res.json({success:true,message:'Product found successfully'})
     }catch (error){
         console.log(error);
         res.json({success:false,message:error.message})
@@ -68,6 +73,8 @@ const singleProduct = async(req,res)=>{
 //function for remove product
 const removeProduct = async(req,res)=>{
     try{
+        await productModel.findByIdAndDelete(req.params.id);
+        res.json({success:true,message:'Product removed successfully'})
     } catch (error){
         console.log(error);
         res.json({success:false,message:error.message})
